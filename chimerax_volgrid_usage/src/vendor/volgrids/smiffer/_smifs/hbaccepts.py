@@ -1,0 +1,41 @@
+import volgrids as vg
+import volgrids.smiffer as sm
+
+from ._core.hbonds import SmifHBonds
+from ._core.triplet import Triplet
+
+# //////////////////////////////////////////////////////////////////////////////
+class SmifHBAccepts(SmifHBonds):
+    def __init__(self, ms: "sm.MolSystem"):
+        super().__init__(ms)
+        self.kernel = vg.KernelGaussianBivariateAngleDist(
+            radius = sm.MU_DIST_HBA + sm.GAUSSIAN_KERNEL_SIGMAS * sm.SIGMA_DIST_HBA,
+            deltas = self.ms.get_deltas(), dtype = vg.FLOAT_DTYPE, params = sm.PARAMS_HBA
+        )
+        self.hbond_getter = sm.ParserChemTable.get_names_hba
+
+
+    # --------------------------------------------------------------------------
+    def can_be_interactor(self, triplet: Triplet) -> bool:
+        return True # acceptors can always be interactors, no special cases
+
+
+    # --------------------------------------------------------------------------
+    def find_tail_head_positions(self, triplet: Triplet) -> None:
+        triplet.set_pos_head(self.res_atoms)
+
+        ############################### TAIL POSITION
+        ### special cases for RNA
+        if sm.ResnameStandard.is_nucleic(triplet.resname):
+            if triplet.interactor == "O3'": # tail points are in different residues
+                triplet.set_pos_tail_custom(
+                    atoms = self.all_atoms,
+                    query_t0 = triplet.str_this_res,
+                    query_t1 = triplet.str_next_res
+                )
+                return
+
+        triplet.set_pos_tail(self.res_atoms)
+
+
+# //////////////////////////////////////////////////////////////////////////////

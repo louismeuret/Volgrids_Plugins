@@ -1,0 +1,7 @@
+!fyh:_ Example application built with freyacli. Contains some utilities related to freyacli usage.
+@summary
+    !fyh:_ Displays a summary of subcommands for a FYR/FYH pair.
+    !fyh:app_name Name of the application.
+    !fyh:path_fyr Path for the FYR file.
+    !fyh:path_fyh Path for the FYH file.
+!@

@@ -1,0 +1,73 @@
+from ._misc.utils import Utils
+Utils.assert_vendors()
+
+from ._version import __version__
+
+from ._core.box import Box
+from ._core.grid import Grid
+from ._core.math import Math
+
+from ._kernels._core.k_operation import KOperation
+from ._kernels._core.kernel import Kernel
+from ._kernels.boolean import \
+    KernelSphere, KernelCylinder, KernelDisk, KernelDiskConecut
+from ._kernels.gaussian import \
+    KernelGaussianUnivariateDist, KernelGaussianBivariateAngleDist
+
+from ._misc.params_gaussian import ParamsGaussian, \
+    ParamsGaussianUnivariate, ParamsGaussianBivariate
+from ._misc.timer import Timer
+from ._misc.known_configs import KNOWN_CONFIGS
+
+from ._parsers.parser_ini import ParserIni
+from ._parsers.parser_config import ParserConfig
+from ._parsers.grid_format import GridFormat
+from ._parsers.grid_io import GridIO
+
+from .apbs.apbs_subprocess import APBSSubprocess
+
+from ._ui.app_subcommand import AppSubcommand
+from ._ui.app_main import AppMain
+
+
+############################# CONFIG FILE GLOBALS ##############################
+_keys_other = set(globals().keys())
+
+GZIP_COMPRESSION: int = 9
+WARNING_GRID_SIZE: float = 5.0e7
+OVERWRITE_OK: bool = True
+
+USE_FIXED_DELTAS: bool = True
+ENSURE_EQUILATERAL: bool = False
+EXTRA_BOX_SIZE: int = 5
+
+GRID_DX: float = 0.25
+GRID_DY: float = 0.25
+GRID_DZ: float = 0.25
+
+GRID_XRES: int = 200
+GRID_YRES: int = 200
+GRID_ZRES: int = 200
+
+__config_keys__ = set(globals().keys()) - _keys_other
+__config_keys__.remove("_keys_other")
+
+
+######################## COMMAND LINE ARGUMENTS GLOBALS ########################
+### These are global variables that are to be set by reading config files
+### DEFAULT config.ini allows to first read "config_volgrids.ini" from the volgrid's repo root,
+### to be used by the volgrid's main scripts. Its default remains None for any other use case.
+### CUSTOM config.ini allows the user to specify a custom config file path from the command line.
+
+import pathlib as _pathlib
+PATH_DEFAULT_CONFIG:      _pathlib.Path  = None # "./config_volgrids.ini"
+PATHS_CUSTOM_CONFIG: list[_pathlib.Path] = []   # "path/input/config.ini"
+STR_CUSTOM_CONFIG : str = ""  # "key0=value0 key1=value1 ..."
+
+
+############################### RUNTIME GLOBALS ################################
+import numpy as _np
+TMP_APBS_CONTENT_IN: str = ""
+TMP_APBS_CONTENT_PQR: str = ""
+FLOAT_DTYPE: type = _np.float32
+MP_CMAP_LOCK = None # multiprocessing lock around CMAP writes (set by trajectory MP runner)

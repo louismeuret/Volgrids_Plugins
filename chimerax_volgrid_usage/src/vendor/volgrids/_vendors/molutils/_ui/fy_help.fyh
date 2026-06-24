@@ -1,0 +1,99 @@
+!fyh:_ molutils is a collection of tools for preprocessing or summarizing details from biomolecular structure files.
+
+@list
+    !fyh:_ Lists the unique values for different aspects of biomolecular structures.
+    @chains
+        !fyh:_ Lists the chains in a PDB file.
+        !fyh:path_in Path of a PDB file.
+        !fyh:first_only Use this flag for displaying only the first chain of the structure.
+    !@
+    @residues
+        !fyh:_ Lists the residues in a PDB file in the format "chainid.resid".
+        !fyh:path_in Path of a PDB file.
+    !@
+!@
+
+@count
+    !fyh:_ Provides counts for different aspects of biomolecular structures.
+    @models
+        !fyh:_ Counts the number of models in a PDB file.
+        !fyh:path_in Path of a PDB file.
+    !@
+    @chains
+        !fyh:_ Counts the number of chains in a PDB file.
+        !fyh:path_in Path of a PDB file.
+    !@
+    @residues
+        !fyh:_ Counts the number of residues in a PDB file in the format "chainid.resid".
+        !fyh:path_in Path of a PDB file.
+    !@
+    @frames
+        !fyh:_ Counts the number of frames in a trajectory.
+            Reports both the expected number of frames (i.e. u.trajectory.n_frames) and the number of actual valid frames.
+            These are reported as "valid/expected" and might differ in some formats, like in XYZ.
+            Requires MDAnalysis.
+        !fyh:path_struct Path of the structure file (e.g. PDB file). Can be anything supported by MDanalysis.
+            If the file also contains the trajectory data (e.g. XYZ file), then "path_traj" can be ommitted.
+        !fyh:path_traj Path of the trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
+    !@
+    @altlocs
+        !fyh:_ Counts the number of atoms/heteroatoms in a PDB file that contain alternate locations (altloc).
+            Only counts one per atom, disregarding how many alternate locations it has.
+        !fyh:path_in Path of a PDB file.
+    !@
+!@
+
+@extract
+    !fyh:_ Extract specific sections of data from biomolecular structures.
+    @models
+        !fyh:_ Extracts the models in a PDB file into separate files.
+        !use:_io_filein_dirout
+        !fyh:first_only Use this flag for extracting only the first model of the structure and disregard the rest.
+    !@
+    @chains
+        !fyh:_ Extracts the chains in a PDB file into separate files.
+        !use:_io_filein_dirout
+        !fyh:first_only Use this flag for extracting only the first chain of the structure and disregard the rest.
+    !@
+    @residue
+        !fyh:_ Extract a specific residue from a PDB file into a separate file.
+        !use:_io_filein_dirout
+        !fyh:residue Residue to extract, in the format "chainid.resid".
+    !@
+    @frames
+        !fyh:_ Extract specific frames from a PDB file into separate file(s).
+            Requires MDAnalysis.
+        !fyh:path_struct Path of the structure file (e.g. PDB file). Can be anything supported by MDanalysis.
+            If the file also contains the trajectory data (e.g. XYZ file), then "path_traj" can be ommitted.
+            In this case, an additional structure file (a copy of the first frame) may be exported for convenience.
+        !fyh:path_traj Path of the trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
+        !fyh:folder_out Path of the directory where to place the unpacked structure(s).
+            If not provided, the parent directory of the input PDB file will be used.
+        !fyh:frames Frame indices to extract. If no frames are specified, all frames are extracted.
+            If only 1 frame is specified, the frame is exported to PDB (regardless of the "unpack" flag).
+        !fyh:unpack When used, the specified frames will be unpacked into single PDB files.
+            Otherwise, the frames are exported into a single XTC file.
+    !@
+!@
+
+@select
+    !fyh:_ Select specific atoms with a custom query (MDAnalysis format) and save them into a file. Requires MDAnalysis.
+    !fyh:query Query for selecting the atoms of interest. Must follow MDAnalysis format
+    !fyh:path_in Path of the structure file whose atoms will be selected. Can be anything supported by MDanalysis.
+    !fyh:path_out Path for the output selected atoms. Can be anything supported by MDanalysis.
+    !fyh:paths_traj Input and output paths for an optional trajectory.
+        The selection will be applied for all frames of the selection accordingly.
+!@
+
+@merge
+    !fyh:_ Merge structures from multiple PDB files into a single PDB file.
+    !fyh:paths_in List of PDB file paths with the input structures to be merged.
+        At least one PDB file must be provided.
+    !fyh:path_out Path where to save the merged PDB structure.
+!@
+
+!def _io_filein_dirout
+    !fyh:path_in Path of a PDB file.
+    !fyh:folder_out Path of the directory where to place the unpacked structure(s).
+        If not provided, the parent directory of the input PDB file will be used.
+!fed

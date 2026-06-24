@@ -1,0 +1,2 @@
+[chimerax.bundles]
+chimerax.volgrids = chimerax.volgrids:bundle_api

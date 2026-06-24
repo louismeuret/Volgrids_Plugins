@@ -1,0 +1,75 @@
+@list
+    @chains
+        path_in[]1.PATH
+        ~first_only[f,first-only]
+    !@
+    @residues
+        path_in[]1.PATH
+    !@
+!@
+
+@count
+    @models
+        path_in[]1.PATH
+    !@
+    @chains
+        path_in[]1.PATH
+    !@
+    @residues
+        path_in[]1.PATH
+    !@
+    @frames
+        path_struct[]1.PATH
+        ~path_traj[]1.PATH
+    !@
+    @altlocs
+        path_in[]1.PATH
+    !@
+!@
+
+@extract
+    @models
+        !use:_io_filein_dirout
+        ~first_only[f,first-only]
+    !@
+    @chains
+        !use:_io_filein_dirout
+        ~first_only[f,first-only]
+    !@
+    @residue
+        path_in[]1.PATH
+        residue[]1.STR
+        ~folder_out[o,out]1.PATH
+    !@
+    @frames
+        path_struct[]1.PATH
+        ~path_traj[]1.PATH
+        ~folder_out[o,out]1.PATH
+        ~frames[f,frames]1+.INT
+        ~unpack[u,unpack]
+    !@
+!@
+
+@remove
+    @altlocs
+        path_in[]1.PATH
+        path_out[]1.PATH
+    !@
+!@
+
+@select
+    query[]1.STR
+    path_in[]1.PATH
+    path_out[]1.PATH
+    ~paths_traj[t,traj]2.PATH
+!@
+
+@merge
+    paths_in[]1+.PATH
+    path_out[o,out]1.PATH
+!@
+
+!def _io_filein_dirout
+    path_in[]1.PATH
+    ~folder_out[]1.PATH
+!fed

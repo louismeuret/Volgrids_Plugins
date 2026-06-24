@@ -1,0 +1,28 @@
+Metadata-Version: 2.4
+Name: ChimeraX-Volgrids
+Version: 1.11
+Summary: SMIF creation and visualisation tool for ChimeraX
+Home-page: https://github.com/DiegoBarMor/volgrids
+Author: Louis Meuret
+Author-email: Louis Meuret <your.email@example.com>
+License: MIT
+Project-URL: Homepage, https://example.com
+Keywords: ChimeraX,plugin,orientation,visualization
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Chemistry
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Classifier: ChimeraX :: Bundle :: Structure Analysis :: 1,1 :: chimerax.volgrids ::  :: 
+Classifier: ChimeraX :: Tool :: Volgrids :: Structure Analysis :: Volumetric grid analysis with Smiffer and APBS integration
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: ChimeraX-BundleBuilder>=1.0; extra == "dev"
+Dynamic: author
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: requires-python
+
+Works in progress, still break times to times
