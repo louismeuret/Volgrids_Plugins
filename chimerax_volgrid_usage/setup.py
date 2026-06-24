@@ -1,9 +1,14 @@
+import os
 from setuptools import setup
 
 # The bundled VolGrids copy (src/vendor/volgrids) vendors its own freyacli/molutils
 # dependencies, so the only extra runtime requirements are h5py and MDAnalysis
 # (numpy/scipy/matplotlib are already provided by ChimeraX itself, see bundle_info.xml).
-install_requires = ["h5py", "MDAnalysis"]
+#
+# install_bundled.sh instead vendors numpy/scipy/matplotlib/MDAnalysis/h5py directly into
+# src/vendor_deps (a fully self-contained, offline-installable wheel) and sets
+# VOLGRIDS_BUNDLE_DEPS=1 so pip doesn't also try to separately fetch them from PyPI.
+install_requires = [] if os.environ.get("VOLGRIDS_BUNDLE_DEPS") == "1" else ["h5py", "MDAnalysis"]
 
 setup(
     name="ChimeraX-Volgrids", 

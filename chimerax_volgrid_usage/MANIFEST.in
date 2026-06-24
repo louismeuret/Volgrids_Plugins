@@ -3,4 +3,5 @@ include README.md
 include LICENSE*
 recursive-include src *.py *.xml *.ini *.chem *.md *.txt *.yml *.sh
 recursive-include src/vendor *
+recursive-include src/vendor_deps *
 recursive-include results_smiffer *

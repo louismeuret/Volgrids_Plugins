@@ -689,6 +689,12 @@ class SmifferTool(ToolInstance):
         """Folder containing the VolGrids copy bundled with this plugin (holds the 'volgrids' package)"""
         return os.path.join(os.path.dirname(__file__), "vendor")
 
+    def _vendor_deps_dir(self):
+        """Folder containing bundled third-party dependencies (numpy/scipy/matplotlib/
+        MDAnalysis/h5py), only present when built via install_bundled.sh. Kept separate
+        from _vendor_dir() so the regular build never silently picks these up."""
+        return os.path.join(os.path.dirname(__file__), "vendor_deps")
+
     def _default_config_path(self):
         """VolGrids' own config_volgrids.ini, bundled with this plugin and listing every
         tunable setting; GRID_FORMAT_OUTPUT is set to CMAP here instead of upstream's MRC"""
@@ -731,16 +737,21 @@ class SmifferTool(ToolInstance):
         vendor directory is injected there directly instead of relying on PYTHONPATH.
         """
         vendor_dir = self._vendor_dir()
+        vendor_dirs = [vendor_dir]
+        vendor_deps_dir = self._vendor_deps_dir()
+        if os.path.isdir(vendor_deps_dir):
+            vendor_dirs.append(vendor_deps_dir)
+
         code = (
             "import sys; "
-            f"sys.path.insert(0, {vendor_dir!r}); "
-            "sys.argv[0] = 'volgrids'; "
+            + "".join(f"sys.path.insert(0, {d!r}); " for d in reversed(vendor_dirs))
+            + "sys.argv[0] = 'volgrids'; "
             "from volgrids.__main__ import main; "
             "sys.exit(main())"
         )
         env = os.environ.copy()
         existing = env.get("PYTHONPATH", "")
-        env["PYTHONPATH"] = vendor_dir + (os.pathsep + existing if existing else "")
+        env["PYTHONPATH"] = os.pathsep.join(vendor_dirs) + (os.pathsep + existing if existing else "")
         self._augment_path_for_apbs_tools(env)
         return [sys.executable, "-c", code], env
 
