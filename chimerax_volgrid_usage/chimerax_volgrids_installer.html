@@ -1,0 +1,109 @@
+
+<div style="max-width: 520px; margin: 2rem auto; padding: 0 1rem;">
+  <h2 class="sr-only">ChimeraX Volgrids bundle installer</h2>
+
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem;">
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem;">
+      <div style="width: 44px; height: 44px; border-radius: var(--border-radius-md); background: var(--color-background-info); display: flex; align-items: center; justify-content: center;">
+        <i class="ti ti-package" style="font-size: 22px; color: var(--color-text-info);" aria-hidden="true"></i>
+      </div>
+      <div>
+        <p style="font-size: 16px; font-weight: 500; margin: 0; color: var(--color-text-primary);">chimerax_volgrids</p>
+        <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0;">Version 1.12 — py3-none-any</p>
+      </div>
+    </div>
+
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 13px; color: var(--color-text-secondary); font-family: var(--font-mono); word-break: break-all;">
+      chimerax_volgrids-1.12-py3-none-any.whl
+    </div>
+
+    <div id="status-box" style="display: none; border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 14px;"></div>
+
+    <button id="install-btn" onclick="triggerInstall()" style="width: 100%; padding: 0.65rem 1rem; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <i class="ti ti-download" aria-hidden="true"></i>
+      Install in ChimeraX
+    </button>
+
+    <p style="margin: 1rem 0 0; font-size: 12px; color: var(--color-text-tertiary); text-align: center;">
+      Open this page inside ChimeraX's built-in browser for automatic installation.
+    </p>
+  </div>
+
+  <div style="margin-top: 1.25rem; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem;">
+    <p style="font-size: 13px; font-weight: 500; margin: 0 0 0.5rem; color: var(--color-text-primary);">
+      <i class="ti ti-terminal" style="font-size: 15px; vertical-align: -2px; margin-right: 6px;" aria-hidden="true"></i>
+      Manual install via command line
+    </p>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.65rem 0.85rem; font-family: var(--font-mono); font-size: 12px; color: var(--color-text-primary); word-break: break-all; position: relative;">
+      toolshed install https://github.com/louismeuret/Volgrids_Plugins/raw/refs/heads/main/chimerax_volgrid_usage/dist/chimerax_volgrids-1.12-py3-none-any.whl
+      <button onclick="copyCmd()" title="Copy command" style="position: absolute; top: 6px; right: 6px; padding: 2px 6px; font-size: 11px; cursor: pointer; border-radius: 4px;">
+        <i class="ti ti-copy" style="font-size:13px;" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WHL_URL = "https://github.com/louismeuret/Volgrids_Plugins/raw/refs/heads/main/chimerax_volgrid_usage/dist/chimerax_volgrids-1.12-py3-none-any.whl";
+const CMD = "toolshed install " + WHL_URL;
+
+function showStatus(msg, type) {
+  var box = document.getElementById('status-box');
+  var colors = {
+    info:    { bg: 'var(--color-background-info)',    text: 'var(--color-text-info)' },
+    success: { bg: 'var(--color-background-success)', text: 'var(--color-text-success)' },
+    warning: { bg: 'var(--color-background-warning)', text: 'var(--color-text-warning)' },
+    danger:  { bg: 'var(--color-background-danger)',  text: 'var(--color-text-danger)' },
+  };
+  var c = colors[type] || colors.info;
+  box.style.background = c.bg;
+  box.style.color = c.text;
+  box.style.display = 'block';
+  box.innerHTML = msg;
+}
+
+function triggerInstall() {
+  var ua = navigator.userAgent;
+  var isChimeraX = ua.indexOf("UCSF-ChimeraX") !== -1;
+
+  if (!isChimeraX) {
+    showStatus(
+      '<i class="ti ti-alert-triangle" style="vertical-align:-2px; margin-right:6px;" aria-hidden="true"></i>' +
+      'Not running inside ChimeraX. Use the command line method below, or open this page in ChimeraX\'s built-in browser.',
+      'warning'
+    );
+    return;
+  }
+
+  showStatus(
+    '<i class="ti ti-loader" style="vertical-align:-2px; margin-right:6px;" aria-hidden="true"></i>' +
+    'Sending install request to ChimeraX...',
+    'info'
+  );
+
+  var btn = document.getElementById('install-btn');
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+
+  window.location.href = WHL_URL;
+
+  setTimeout(function() {
+    showStatus(
+      '<i class="ti ti-circle-check" style="vertical-align:-2px; margin-right:6px;" aria-hidden="true"></i>' +
+      'Installation request sent. Check the ChimeraX log for confirmation.',
+      'success'
+    );
+  }, 1500);
+}
+
+function copyCmd() {
+  navigator.clipboard.writeText(CMD).then(function() {
+    showStatus(
+      '<i class="ti ti-circle-check" style="vertical-align:-2px; margin-right:6px;" aria-hidden="true"></i>' +
+      'Command copied to clipboard.',
+      'success'
+    );
+  });
+}
+</script>
