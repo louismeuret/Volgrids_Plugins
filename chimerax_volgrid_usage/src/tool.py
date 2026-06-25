@@ -4,7 +4,7 @@ from Qt.QtWidgets import (QVBoxLayout, QPushButton, QLabel, QListWidget, QHBoxLa
                          QInputDialog, QMessageBox, QFileDialog, QLineEdit, QComboBox,
                          QCheckBox, QSpinBox, QDoubleSpinBox, QTextEdit, QProgressBar,
                          QGroupBox, QGridLayout, QFormLayout, QTabWidget, QWidget,
-                         QScrollArea, QSplitter, QStackedWidget)
+                         QScrollArea, QSplitter, QStackedWidget, QApplication)
 from functools import partial
 from Qt.QtCore import Qt, QThread
 try:
@@ -517,12 +517,18 @@ class SmifferTool(ToolInstance):
         dependencies_layout.addWidget(deps_refresh_btn)
         dependencies_layout.addStretch()
 
+        # Citation / Help tabs
+        citation_tab = self._build_citation_tab()
+        help_tab = self._build_help_tab()
+
         # Add tabs
         tabs.addTab(basic_tab, "Basic Settings")
         tabs.addTab(advanced_tab, "Advanced Settings")
         tabs.addTab(vgtools_tab, "VGTools")
         tabs.addTab(smutils_tab, "SMUtils")
         tabs.addTab(dependencies_tab, "Dependencies")
+        tabs.addTab(citation_tab, "Citation")
+        tabs.addTab(help_tab, "Help")
         
         # Control buttons
         control_layout = QHBoxLayout()
@@ -1215,6 +1221,61 @@ class SmifferTool(ToolInstance):
         if isinstance(widget, QComboBox):
             return widget.currentText()
         return widget.text().strip()
+
+    def _build_citation_tab(self):
+        """Tab pointing to the paper describing the SMIF method this tool implements."""
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+
+        header = QLabel("If you use this tool, please cite:")
+        header.setStyleSheet("font-weight: bold;")
+        layout.addWidget(header)
+
+        citation_text = QLabel(
+            "Barquero Morera D, Mattiotti G, Kocev A, Rousselot A, Meuret L, Rouaud L, "
+            "Santuz H, Baaden M, Taly A, Pasquali S.<br>"
+            "<i>Statistical Molecular Interaction Fields: A Fast and Informative Tool for "
+            "Characterizing RNA and Protein-Binding Pockets.</i><br>"
+            "J Chem Theory Comput. 2025;21(18):9120-9135.<br>"
+            "DOI: <a href=\"https://doi.org/10.1021/acs.jctc.5c00688\">10.1021/acs.jctc.5c00688</a><br>"
+            "PubMed: <a href=\"https://pubmed.ncbi.nlm.nih.gov/40890087/\">"
+            "https://pubmed.ncbi.nlm.nih.gov/40890087/</a>"
+        )
+        citation_text.setTextFormat(Qt.RichText)
+        citation_text.setOpenExternalLinks(True)
+        citation_text.setWordWrap(True)
+        layout.addWidget(citation_text)
+
+        copy_btn = QPushButton("Copy Citation")
+        copy_btn.clicked.connect(lambda: QApplication.clipboard().setText(
+            "Barquero Morera D, Mattiotti G, Kocev A, Rousselot A, Meuret L, Rouaud L, "
+            "Santuz H, Baaden M, Taly A, Pasquali S. Statistical Molecular Interaction "
+            "Fields: A Fast and Informative Tool for Characterizing RNA and Protein-Binding "
+            "Pockets. J Chem Theory Comput. 2025;21(18):9120-9135. "
+            "doi:10.1021/acs.jctc.5c00688"
+        ))
+        layout.addWidget(copy_btn)
+        layout.addStretch()
+        return tab
+
+    def _build_help_tab(self):
+        """Tab pointing to the VolGrids documentation/source code on GitHub."""
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+
+        header = QLabel("VolGrids documentation and source code:")
+        header.setStyleSheet("font-weight: bold;")
+        layout.addWidget(header)
+
+        link_label = QLabel(
+            "<a href=\"https://github.com/DiegoBarMor/volgrids\">"
+            "https://github.com/DiegoBarMor/volgrids</a>"
+        )
+        link_label.setTextFormat(Qt.RichText)
+        link_label.setOpenExternalLinks(True)
+        layout.addWidget(link_label)
+        layout.addStretch()
+        return tab
 
     def _build_operation_tab(self, operations):
         """Build a tab with an operation selector and one auto-generated form page per

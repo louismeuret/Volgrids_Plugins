@@ -12,7 +12,7 @@ install_requires = [] if os.environ.get("VOLGRIDS_BUNDLE_DEPS") == "1" else ["h5
 
 setup(
     name="ChimeraX-Volgrids", 
-    version="1.11",
+    version="1.12",
     description="Volumetric grid analysis tool for ChimeraX with Smiffer and APBS integration",
     author="Louis Meuret",
     author_email="contact@example.com",

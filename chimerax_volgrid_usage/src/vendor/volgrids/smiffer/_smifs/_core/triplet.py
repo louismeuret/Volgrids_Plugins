@@ -18,9 +18,13 @@ class Triplet:
         self.pos_interactor: np.ndarray | None = None
 
         self.resname = res.resname.upper()
-        self.str_prev_res = f"segid {res.segid} and resid {res.resid - 1}"
-        self.str_this_res = f"segid {res.segid} and resid {res.resid    }"
-        self.str_next_res = f"segid {res.segid} and resid {res.resid + 1}"
+        ### an empty segid (common for plain PDB files with no segment annotations)
+        ### would otherwise build a malformed selection like "segid  and resid 1",
+        ### which MDAnalysis's parser rejects with "Unexpected token 'and'"
+        seg_clause = f"segid {res.segid} and " if res.segid else ""
+        self.str_prev_res = f"{seg_clause}resid {res.resid - 1}"
+        self.str_this_res = f"{seg_clause}resid {res.resid    }"
+        self.str_next_res = f"{seg_clause}resid {res.resid + 1}"
 
     # --------------------------------------------------------------------------
     def set_pos_tail(self, atoms) -> np.ndarray | None:

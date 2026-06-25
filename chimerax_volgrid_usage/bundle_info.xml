@@ -1,6 +1,6 @@
 
 <BundleInfo name="ChimeraX-Volgrids"
-	    version="1.11" package="chimerax.volgrids"
+	    version="1.12" package="chimerax.volgrids"
   	    minSessionVersion="1" maxSessionVersion="1">
   	    
     <Author>Volgrids Plugin</Author>
